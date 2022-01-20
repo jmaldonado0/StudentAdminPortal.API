@@ -14,9 +14,6 @@
 	 catch {"Invalid format."}
  } while (![boolean]($userInput -as [DateTime]))
  
- "Date: " + $UserDateParse
- 
-
  #Custom Folder name for logs.
  $FolderName = 'ExpressErrorLogs'
  $FolderPath = ".\$FolderName"

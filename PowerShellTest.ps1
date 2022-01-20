@@ -13,7 +13,7 @@
 	 try {$userInput = Read-Host "What date would you like to verify from the last 24 hours? In any date format you prefer."}
 	 catch {"Invalid format."}
  } while (![boolean]($userInput -as [DateTime]))
- 
+  
  #Custom Folder name for logs.
  $FolderName = 'ExpressErrorLogs'
  $FolderPath = ".\$FolderName"
