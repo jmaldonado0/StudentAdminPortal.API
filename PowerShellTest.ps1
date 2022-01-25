@@ -1,8 +1,8 @@
 ﻿ #TODO: Delete and replaced with just error, after testing is done.
  $EventLog = 'Error','Information'
   
- #Logs to search from DCOD.
- $LogSources = 'System', 'Application'
+ #Logs sources to search.
+ $LogSources = 'PARTY', 'CCS', 'EC', 'DCTAutoRetrySvcLog', 'DCTBillingMonitorLog', 'DCTMSMQBillingListener', 'DCTSchedRequestLog'
   
  $SaveDateFormat = "yyyy-MM-dd"
  

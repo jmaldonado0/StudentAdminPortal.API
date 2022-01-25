@@ -29,5 +29,3 @@
 		Export-Csv -Path $filePath
 	}
  }
-
-pause
