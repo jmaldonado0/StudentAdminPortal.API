@@ -1,8 +1,8 @@
 #TODO: Delete and replaced with just error, after testing is done.
-$EventLog = 'Error','Information'
+$EventLog = 'Error','Information', 'Warning'
   
 #Logs sources to search.
-$LogSources = 'PARTY', 'CCS', 'EC', 'DCTAutoRetrySvcLog', 'DCTBillingMonitorLog', 'DCTMSMQBillingListener', 'DCTSchedRequestLog'
+$LogSources = 'PARTY', 'CCS', 'EC', 'DCTAutoRetrySvcLog', 'DCTBillingMonitorLog', 'DCTMSMQBillingListener', 'DCTSchedRequestLog', 'System'
   
 $SaveDateFormat = "yyyy-MM-dd"
  
@@ -25,7 +25,7 @@ foreach($logSource in $LogSources){
 	$filePath = "$FolderPath\$fileName"
 
 	If(!(test-path $filePath)){
-		Get-EventLog -LogName $logSource -EntryType $EventLog[1] -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)).AddDays(1) |
+		Get-EventLog -LogName $logSource -EntryType $EventLog[2] -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)).AddDays(1) |
 		Export-Csv -Path $filePath
 	}
 }
