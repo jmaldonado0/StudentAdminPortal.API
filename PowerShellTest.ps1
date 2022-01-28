@@ -4,13 +4,13 @@ $EventLog = 'Error','Information', 'Warning'
 #Logs sources to search.
 $LogSources = 'PARTY', 'CCS', 'EC', 'DCTAutoRetrySvcLog', 'DCTBillingMonitorLog', 'DCTMSMQBillingListener', 'DCTSchedRequestLog', 'System'
   
-$SaveDateFormat = "yyyy-MM-dd"
+$SaveDateFormat = 'yyyy-MM-dd'
  
-$FolderName = 'ErrorLogs'
+$FolderName = 'ErrorLogs' 
  
 $DateToCheck = Get-Date
 	 
-"From date " + ([DateTime]($DateToCheck)).AddDays(-1) + " to $DateToCheck"
+"From date $(([DateTime]($DateToCheck)).AddDays(-1)) to $DateToCheck"
   
 $FolderPath = ".\$FolderName"
 
@@ -25,8 +25,7 @@ foreach($logSource in $LogSources){
 	$filePath = "$FolderPath\$fileName"
 
 	If(!(test-path $filePath)){
-		Get-EventLog -LogName $logSource -EntryType $EventLog[2] -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)).AddDays(1) |
+		Get-EventLog -LogName $logSource -EntryType $EventLog[2] -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)) |
 		Export-Csv -Path $filePath
 	}
 }
-#testing  12,.2232
