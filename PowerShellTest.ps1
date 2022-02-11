@@ -2,30 +2,45 @@
 $EventLog = 'Error','Information', 'Warning'
   
 #Logs sources to search.
-$LogSources = 'PARTY', 'CCS', 'EC', 'DCTAutoRetrySvcLog', 'DCTBillingMonitorLog', 'DCTMSMQBillingListener', 'DCTSchedRequestLog', 'System'
+$LogSources = 'System'
+#$LogSources = 'PARTY', 'CCS', 'EC', 'DCTAutoRetrySvcLog', 'DCTBillingMonitorLog', 'DCTMSMQBillingListener', 'DCTSchedRequestLog'
   
-$SaveDateFormat = 'yyyy-MM-dd'
- 
-$FolderName = 'ErrorLogs' 
- 
+#Blob container name
+$Container = ''
+#Container Url
+$Url = ""
+#Container Sas
+$Sas = ""
+#Header for web request
+$Headers = @{
+	'x-ms-blob-type' = 'BlockBlob'
+	'x-ms-blob-content-type' = 'text/plain'
+} 
+
+#Date to check from its last 24 hours
 $DateToCheck = Get-Date
-	 
+#Save Date Format for the file
+$SaveDateFormat = 'yyyy-MM-dd'
+
 "From date $(([DateTime]($DateToCheck)).AddDays(-1)) to $DateToCheck"
-  
-$FolderPath = ".\$FolderName"
 
-If(!(test-path $FolderPath))
-{
-	New-Item -ItemType Directory -Force -Path $FolderPath
-}
- 
 foreach($logSource in $LogSources){
-	#Name format: Computer/ServerName_logSource_Date.extension
-	$fileName = $env:computername + "_" + $logSource + "_"+ [string][DateTime]::Parse($DateToCheck).ToString($SaveDateFormat) + ".csv"
-	$filePath = "$FolderPath\$fileName"
+	#Concatenate Name format: Computer/ServerName_logSource_Date.extension
+	$fileName = 'TESTLD1_'+ $env:computername + "_" + $logSource + "_"+ [string][DateTime]::Parse($DateToCheck).ToString($SaveDateFormat) + ".txt"
+	#File path for uri
+	$filePath = "$Container/$fileName"
+	
+	#Uri concatenation
+	$uri = $Url + $filePath + $Sas
 
-	If(!(test-path $filePath)){
-		Get-EventLog -LogName $logSource -EntryType $EventLog[2] -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)) |
-		Export-Csv -Path $filePath
+	$logResult = Get-EventLog -LogName $logSource -EntryType $EventLog[2] -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)) | ConvertTo-Csv | ConvertFrom-Csv
+	
+	try 
+	{ 
+		$result = Invoke-WebRequest -Uri $uri -Method Put -Headers $Headers -Body $logResult
+	}
+	catch { 
+		"An exception was caught: $($_.Exception.Message)"
+		$_.Exception.Response 
 	}
 }
