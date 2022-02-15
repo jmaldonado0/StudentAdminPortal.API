@@ -28,23 +28,23 @@ $DateSaveFormat = 'yyyy-MM-dd'
 foreach($logSource in $LogSources){
 	#TODO: Remove 'TESTLD1_'
 	#File naming concatenate format: Folder Name(if applied)/ServerName_logSource_Date.extension 
-	$file = (AddProperUriString -value $FolderName) + 'TESTLD1_' + $env:computername + '_' + $logSource + '_' + [string][DateTime]::Parse($DateToCheck).ToString($DateSaveFormat) + '.txt'
+	$file = (AddProperUriString -value $FolderName) + 'TESTLD1_' + $env:computername + '_' + $logSource + '_' + [DateTime]::Parse($DateToCheck).ToString($DateSaveFormat) + '.txt'
 
 	$uri = $EndPointUrl + (AddProperUriString -value $EndPointContainer) + $file + $Sas
 
 	try { 
-		$logResult = Get-EventLog -LogName $logSource -EntryType $EventLog[0] -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)) | ConvertTo-Csv | ConvertFrom-Csv
-
+		$logResult = Get-EventLog -LogName $logSource -EntryType $EventLog[0] -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)) | ConvertTo-Csv | ConvertFrom-Csv | Out-String
+		
 		if($logResult) {
 			$result = Invoke-WebRequest -Uri $uri -Method Put -Headers $Headers -Body $logResult
-			"Status code $($result.StatusCode) was executed"
+			"Status code $($result.StatusCode) was executed for log source: $logSource"
 		}
-		else{
-			"File was empty"	
+		else {
+			"File was empty for log source: $logSource"
 		}
 	}
 	catch { 
-		"An exception was caught: $($_.Exception.Message)"
+		"On log source $logSource an exception was caught: $($_.Exception.Message)"
 		$_.Exception.Response
 	}
 }
