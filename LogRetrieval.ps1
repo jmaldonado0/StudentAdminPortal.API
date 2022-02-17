@@ -5,10 +5,28 @@ param(
 	$ScriptReturn = 0
 )
 
+function AddProperUriString {
+	param (
+		[string]$value
+	)
+	IF ($value) {
+		return $value + '/'
+	}
+}
+
+function IsValidURIAddress {
+	param(
+		[string]$address
+	)
+	IF (!$address -or !$address.EndsWith('/')) { return $false }
+	$local:uri = $address -as [System.URI]
+	return ($null -ne $uri.AbsoluteURI -and $uri.Scheme -match '[http|https]')
+}
+
 $Script:UriSplit = $UriAddress.Split('?')
 
 if (!(IsValidURIAddress -address $Script:UriSplit[0]) -or !$Script:UriSplit[1]) {
-	"Invalid URI"
+	"Invalid URI address"
 	Exit 1
 }
 
@@ -35,26 +53,25 @@ foreach($logSource in $LogSources){
 	#File naming concatenate format: Folder Name(if applied)/ServerName_logSource_Date.extension 
 	$local:file = (AddProperUriString -value $LogRetrievalFolderName) + 'TESTLD1_' + $env:computername + '_' + $logSource + '_' + [DateTime]::Parse($DateToCheck).ToString($DateSaveFormat) + '.txt'
 
-	$local:uri = $Script:UriSplit[0] + $local:file + '?'+ $Script:UriSplit[1]
+	$local:uri = $Script:UriSplit[0] + $local:file + '?' + $Script:UriSplit[1]
 
-	try { 
-		#TODO: Maybe modify entry type to only accept 'x' log source
-		#$logResult = Get-EventLog -LogName $logSource -EntryType $EventLog[0] -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)) | ConvertTo-Csv | ConvertFrom-Csv | Out-String
-		$logResult = Get-WinEvent -LogName $logSource| 
-		Select-Object * | 
-		Where-Object { 
-			$_.LevelDisplayName -eq $EventLog[0] -and 
-			($_.TimeCreated -gt ([DateTime]($DateToCheck)).AddDays(-1) -and	$_.TimeCreated -lt ([DateTime]($DateToCheck))) 
-			} | 
-		Out-String
-		
+	try {
+		if($logSource -match '(PARTY|CCS|EC)') { 
+			"Logging $logSource Entry Type Infomation"
+			$logResult = Get-EventLog -LogName $logSource -EntryType 'Information' -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)) | Select-Object * | Out-String
+		}
+		else { 
+			"Logging $logSource on Entry Type Error"
+			$logResult = Get-EventLog -LogName $logSource -EntryType $EventLog[0] -After ([DateTime]($DateToCheck)).AddDays(-1) -Before ([DateTime]($DateToCheck)) | Select-Object * | Out-String
+		}
+	
 		if($logResult) {
+			"Exporting log source: $logSource"
 			$result = Invoke-WebRequest -Uri $local:uri -Method Put -Headers $Headers -Body $logResult
 			"Status code $($result.StatusCode) was executed for log source: $logSource"
 		}
 		else {
-			"File was empty for log source: $logSource"
-			$ScriptReturn = 1
+			"No logs were found on log source: $logSource"
 		}
 	}
 	catch { 
@@ -62,24 +79,6 @@ foreach($logSource in $LogSources){
 		$_.Exception.Response
 		$ScriptReturn = 1
 	}
-}
-
-function AddProperUriString {
-	param (
-		[string]$value
-	)
-	IF ($value) {
-		return $value + '/'
-	}
-}
-
-function IsValidURIAddress {
-	param(
-		[string]$address
-	)
-	IF (!$address -or !$address.EndsWith('/')) { return $false }
-	$local:uri = $address -as [System.URI]
-	return ($null -ne $uri.AbsoluteURI -and $uri.Scheme -match '[http|https]')
 }
 
 Exit $ScriptReturn
