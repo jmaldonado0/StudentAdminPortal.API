@@ -34,10 +34,9 @@ if (!(IsValidURIAddress -address $Script:UriSplit[0]) -or !$Script:UriSplit[1]) 
 
 	Exit 1
 }
-  
+
 #Logs sources to search.
 $LogSources = 'Application', 'PARTY', 'CCS', 'EC', 'DCTAutoRetrySvcLog', 'DCTBillingMonitorLog', 'DCTMSMQBillingListener', 'DCTSchedRequestLog'
-$LogSources = 'System'
 
 $Headers = @{
 	'x-ms-blob-type' = 'BlockBlob'
@@ -81,7 +80,6 @@ foreach($logSource in $LogSources){
 
 		$ScriptReturn = 1
 	}
-
 }
 
 Exit $ScriptReturn
