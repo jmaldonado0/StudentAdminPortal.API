@@ -1,7 +1,7 @@
 param(
-	[string] $UriAddress,
+	$UriAddress,
 	#Optional Folder Name, for the logs
-	[string] $LogRetrievalFolderName,
+	$LogRetrievalFolderName,
 	$ScriptReturn = 0
 )
 
@@ -27,7 +27,13 @@ function IsValidURIAddress {
 	return $null -ne $uri.AbsoluteURI -and $uri.Scheme -match '[http|https]'
 }
 
-$Script:UriSplit = $UriAddress.Split('?')
+if($null -eq $UriAddress)
+{ 
+	"No URI has been provided."
+	exit 1
+}
+
+$Script:UriSplit = $UriAddress.ToString().Split('?')
 
 if (!(IsValidURIAddress -address $Script:UriSplit[0]) -or !$Script:UriSplit[1]) {
 	"Invalid URI address"
@@ -36,7 +42,7 @@ if (!(IsValidURIAddress -address $Script:UriSplit[0]) -or !$Script:UriSplit[1]) 
 }
 
 #Logs sources to search.
-$LogSources = 'Application', 'PARTY', 'CCS', 'EC', 'DCTAutoRetrySvcLog', 'DCTBillingMonitorLog', 'DCTMSMQBillingListener', 'DCTSchedRequestLog'
+$LogSources = 'System', 'Application', 'PARTY', 'CCS', 'EC', 'DCTAutoRetrySvcLog', 'DCTBillingMonitorLog', 'DCTMSMQBillingListener', 'DCTSchedRequestLog'
 
 $Headers = @{
 	'x-ms-blob-type' = 'BlockBlob'

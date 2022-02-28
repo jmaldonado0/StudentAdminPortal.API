@@ -1,6 +1,6 @@
 $taskName = "LogRetrievalScheduleTask"
 $taskDescription = "Selects and Retrieves the Windows error event logs, and uploads it to a azure blob."
-$taskArgs = "-UriAddress #{uriAddress} -LogRetrievalFolderName #{logRetrievalFolderName}"
+$taskArgs = "-UriAddress #{AzureEventLogsURL} -LogRetrievalFolderName #{EnvName}"
 $taskExists = Get-ScheduledTask | Where-Object {$_.TaskName -like $taskName}
 
 if($taskExists)
@@ -12,4 +12,4 @@ if($taskExists)
 $action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument "#{deployPath}\LogRetrieval.ps1 $taskArgs"
 $trigger = New-ScheduledTaskTrigger -Daily -At 12:00am
 Register-ScheduledTask -Action $action -Trigger $trigger -TaskName $taskName -Description $taskDescription
-Disable-ScheduledTask $taskName 
+Disable-ScheduledTask $taskName
