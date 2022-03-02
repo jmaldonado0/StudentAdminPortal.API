@@ -46,7 +46,7 @@ $LogSources = 'System', 'Application', 'PARTY', 'CCS', 'EC', 'DCTAutoRetrySvcLog
 
 $Headers = @{
 	'x-ms-blob-type' = 'BlockBlob'
-	'x-ms-blob-content-type' = 'text/csv'
+	'x-ms-blob-content-type' = 'text/plain'
 }
 
 $Script:DateToCheck = Get-Date
@@ -57,7 +57,7 @@ $DateSaveFormat = 'yyyy-MM-dd'
 
 foreach($logSource in $LogSources){
 	#File naming concatenation: Folder Name(if applied)/ServerName_logSource_Date.extension 
-	$local:file = (AddProperUriString -value $LogRetrievalFolderName) + $env:computername + '_' + $logSource + '_' + [DateTime]::Parse($Script:DateToCheck).AddDays(-1).ToString($DateSaveFormat) + '.csv'
+	$local:file = (AddProperUriString -value $LogRetrievalFolderName) + ($env:computername, $logSource, [DateTime]::Parse($Script:DateToCheck).AddDays(-1).ToString($DateSaveFormat) -join '_') + '.csv'
 	
 	$local:uri = $Script:UriSplit[0] + $local:file + '?' + $Script:UriSplit[1]
 
