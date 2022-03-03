@@ -1,5 +1,5 @@
 #This code allows you to check if the azure containter exist
-$context = New-AzureStorageContext -ConnectionString "***BlobEnpointHere****"
+$context = New-AzureStorageContext -ConnectionString "***BlobEndpointHere****"
 
 try
 {   
