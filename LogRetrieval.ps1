@@ -68,7 +68,7 @@ foreach($logSource in $LogSources)
 
 	try 
 	{
-		"Logging $logSource"
+		Write-Host "Logging $logSource"
 
 		$logResult = Get-EventLog -LogName $logSource -After $Script:PreviousDayOfLD -Before $Script:LogDate | Sort-Object -Property TimeGenerated | ConvertTo-Csv -NoTypeInformation | Out-String
 		
