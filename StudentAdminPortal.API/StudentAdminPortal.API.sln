@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.0.32126.317
+VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentAdminPortal.API", "StudentAdminPortal.API\StudentAdminPortal.API.csproj", "{1E7D6BB1-8C0A-4620-BB73-EC290C551FA7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentAdminPortal.API", "StudentAdminPortal.API\StudentAdminPortal.API.csproj", "{79F176D5-9E32-4426-AEEF-260461AD7221}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1E7D6BB1-8C0A-4620-BB73-EC290C551FA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E7D6BB1-8C0A-4620-BB73-EC290C551FA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E7D6BB1-8C0A-4620-BB73-EC290C551FA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E7D6BB1-8C0A-4620-BB73-EC290C551FA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79F176D5-9E32-4426-AEEF-260461AD7221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79F176D5-9E32-4426-AEEF-260461AD7221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79F176D5-9E32-4426-AEEF-260461AD7221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79F176D5-9E32-4426-AEEF-260461AD7221}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B807C97F-C482-4F1F-9900-DDCFA1DAE3ED}
+		SolutionGuid = {DE9327A2-DBAD-4984-A957-5B99F96370CC}
 	EndGlobalSection
 EndGlobal
