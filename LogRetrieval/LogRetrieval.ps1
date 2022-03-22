@@ -78,7 +78,7 @@ foreach($logSource in $LogSources)
 
 			$result = Invoke-WebRequest -Uri $local:uri -Method Put -Headers $Headers -Body $logResult
 
-			Write-Host "Status code $($result.StatusCode) was executed for log source: $logSource`n" -ForegroundColor Green
+			Write-Host "Status code $($result.StatusCode) was executed for log source: $logSource`n" -ForegroundColor $(if($result.StatusCode -like '400') { Green } else { Yellow })
 		}
 
 		else 
@@ -89,7 +89,9 @@ foreach($logSource in $LogSources)
 
 	catch 
 	{ 
-		Write-Warning "On log source $logSource an exception was caught:`n$($_.Exception.Message)`n"
+		Write-Warning "On log source " -nonewline
+		Write-Warning "$logSource " -ForegroundColor Red -Nonewline 
+		Write-Warning "an exception was caught:`n$($_.Exception.Message)`n"
 
 		$ScriptReturn = 1
 	}
