@@ -30,6 +30,19 @@ namespace StudentAdminPortal.API
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddCors((options) =>
+            {
+                options.AddPolicy("angularApplication", (builder) =>
+                {
+                    builder.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST", "PUT", "DELETE")
+                    .WithExposedHeaders("*");
+                });
+                
+
+            });
+
             services.AddControllers();
             services.AddDbContext<StudentAdminContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("StudentAdminPortalDb")));
@@ -58,6 +71,9 @@ namespace StudentAdminPortal.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+
+            app.UseCors("angularApplication");
 
             app.UseAuthorization();
 
